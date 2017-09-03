@@ -38,11 +38,14 @@ col_units = [cross(rows, c) for c in cols]
 square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
 
 # Diagonal Units
+left_diag_units = [rows[index] + cols[index] for index in range(9)]
+right_diag_units = [rows[index] + cols[::-1][index] for index in range(9)]
 
+diag_units = [left_diag_units, right_diag_units]
 
 # Get the peers for each unit
 # First get all the units in a big list
-unitlist = row_units + col_units + square_units
+unitlist = row_units + col_units + square_units + diag_units
 # create a dictionary of each box where the values are the units in the units related to it
 units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
 # Narrow down the peers by removing duplicates and the box itself
@@ -56,7 +59,24 @@ def naked_twins(values):
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
+    # For each unit, check to see if there are multiple boxes with the same value
+    for unit in unitlist:
+        naked = {}
+        # Check each box and record values
+        for box in unit:
+            if values[box] in naked.keys():
+                naked[values[box]].append(box)
+            else:
+                naked[values[box]] = [box]
+        # Check for any value that has the the same number of boxes as it has values
+        for value in naked.keys():
+            if len(value) == len(naked[value]) and len(value) > 1:
+                # Eliminate the options in the value from the other items in the unit
+                for box in [box for box in unit if box not in naked[value]]:
+                    for digit in value:
+                        values = assign_value(values, box, values[box].replace(digit, ''))
 
+    return values
     # Find all instances of naked twins
     # Eliminate the naked twins as possibilities for their peers
 
