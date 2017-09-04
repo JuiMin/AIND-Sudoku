@@ -3,27 +3,44 @@
 
 # Question 1 (Naked Twins)
 Q: How do we use constraint propagation to solve the naked twins problem?  
-A:
+A: In regular sudoku solving, we used constraint propagation to converge each box
+on a distinct value by following the rule that no unit (specific collection of boxes) can have boxes with
+the same value. As boxes are filled in, the other boxes' potential values are decreased
+until one or no solution is found for each box.
 
-In the naked twins problem, we took advantage of the fact that if
-a unit of boxes (U) had a set of N number of Boxes (B) and each box in (B) had an identical set (S)
-of N number potential values, then we can eliminate the values in (S) from boxes in (U)
-which were not members of (B). We could do this elimination because boxes in (B) have
-a limited number of options and since the number of options is the same as the number
-of boxes in (B), those options have to reside in the members of (B).
+In the naked twins problem, we used the same methodology but we added a further constraint.
+If a unit U has a subset of boxes B that share an identical set of solutions S, and sets
+B and S have the same size then we can reason boxes in U that are not in B will not contain
+values in S. Using this reasoning, we can eliminate the values in S from the possible solution
+sets of boxes in U that are not in B.
 
-We used this rationale as part of the elimination portion of constraint propagation,
-where we added to the initial Sudoku constraints the criteria
+Our use of constraint propagation allows use to add this characteristic as a constraint
+when eliminating values from a box's potential solutions. When examining the state of
+the board, we can check if a unit has boxes where the naked twins method can apply
+and reduce the number of potential solutions further than just using the rule of
+requiring values in each unit to be unique. This additional constraint reduces the
+number of boards we need to look at by providing an extra method of reducing
+potential values. The final result doesn't change but we can get there faster.
 
 # Question 2 (Diagonal Sudoku)
 Q: How do we use constraint propagation to solve the diagonal sudoku problem?  
-A:
+A: As discussed in question 1, we can use constraint propagation to work towards sudoku
+solutions by acknowledging each box as having a set of potential values and using the
+constraint that each unit must be a set of boxes with non-repeating values. Using this
+non-repeating criteria as our constraint, we can progressively fill in values for
+boxes until we converge on one or no solutions.
 
-Constraint Propagation relies on the use of different criteria in order to
-converge the answer set on a specific answer. Adding the condition that diagonals
-on the board were required to be non repeating sets of digits 1-9 further limited the
-number of possible states we would need to examine.
+In the diagonal sudoku problem, we introduced the idea that the board had an extra set of rules
+to follow; where the left and right diagonals of the board must also follow the same non-repeating
+pattern as the units. This effectively makes them units as well, and we utilized this acknowledgement
+in writing the program.
 
+The operation of our constraint propagation relied on the fact that boxes have certain relationships
+to other boxes and we must satisfy a specific condition for related boxes in pursuit of
+singular solutions for each box. In the diagonal sudoku, some boxes were given
+a new relationships for the constraint to work over, reducing the number of potential solutions.
+
+As opposed to the naked twins problem, diagonal sudoku can change the eventual solution.
 
 ### Install
 
